@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: ro.optimizit.hrolistic
+---
+testFramework: kotlintest
+sourceLanguage: kotlin

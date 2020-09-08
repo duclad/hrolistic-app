@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="auth" target="11" />
+      <module name="auth.main" target="11" />
+      <module name="auth.test" target="11" />
+      <module name="gateway" target="11" />
+      <module name="gateway-spring" target="11" />
+      <module name="gateway.main" target="11" />
+      <module name="gateway.test" target="11" />
+      <module name="test" target="11" />
+      <module name="test.main" target="11" />
+      <module name="test.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

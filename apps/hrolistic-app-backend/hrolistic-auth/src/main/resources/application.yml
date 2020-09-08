@@ -1,0 +1,51 @@
+micronaut:
+  application:
+    name: hrolistic-auth
+  server:
+    port: -1
+    cors:
+      enabled: true
+#  router:
+#    static-resources:
+#      swagger:
+#        paths: classpath:META-INF/swagger
+#        mapping: /swagger/**
+#  config-client:
+#    enabled: true
+  security:
+    enabled: true
+    endpoints:
+      logout:
+        enabled: true
+      login:
+        enabled: true
+      oauth:
+        enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+      writer:
+        header:
+          enabled: true
+      propagation:
+        enabled: true
+        service-id-regex: "hrolistic-gateway|uaa-service"
+consul:
+  client:
+    registration:
+      enabled: true
+      prefer-ip-address: true
+    defaultZone: "${CONSUL_HOST:172.20.238.5}:${CONSUL_PORT:8500}"
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+  info:
+    enabled: true
+    sensitive: false
+mongodb:
+  uri: mongodb://hrolistic:hrolistic@localhost:27017/hrolistic?authSource=hrolistic

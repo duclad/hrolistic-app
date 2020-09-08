@@ -1,0 +1,71 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    consul:
+      host: "${CONSUL_HOST:172.20.238.5}"
+      port: "${CONSUL_PORT:8500}"
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+#        healthCheckPath: ${management.server.servlet.context-path}/health
+        healthCheckInterval: 15s
+    gateway:
+      filter:
+        remove-hop-by-hop:
+          headers:
+            - transfer-encoding
+            - te
+            - trailer
+            - proxy-authorization
+            - proxy-authenticate
+            - x-application-context
+            - upgrade
+      forwarded:
+        enabled: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: auth-service
+          uri: lb://hrolistic-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<path>.*), /$\{path}
+        - id: people-service
+          uri: lb://uaa-service
+          predicates:
+            - Path=/people
+          filters:
+            - RewritePath=/people, /users
+        - id: roles-service
+          uri: lb://uaa-service
+          predicates:
+            - Path=/roles/**
+          filters:
+            - RewritePath=/roles/(?<path>.*), /roles/$\{path}
+    ribbon:
+      ServerListRefreshInterval: 1000
+
+
+management:
+  endpoint:
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+
+logging:
+  level:
+    org.springframework.cloud.consul: DEBUG

@@ -1,0 +1,43 @@
+---
+micronaut:
+  application:
+    name: uaa-service
+  server:
+    port: -1
+---
+micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            validation:
+              secret: pleaseChangeThisSecretForANewOne
+
+---
+mongodb:
+  uri: mongodb://hrolistic:hrolistic@localhost:27017/hrolistic?authSource=hrolistic
+
+---
+consul:
+  client:
+    registration:
+      enabled: true
+    defaultZone: "${CONSUL_HOST:172.20.238.5}:${CONSUL_PORT:8500}"
+
+---
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+  info:
+    enabled: true
+    sensitive: false
+
+---
+micronaut:
+  server:
+    netty:
+      log-level: TRACE

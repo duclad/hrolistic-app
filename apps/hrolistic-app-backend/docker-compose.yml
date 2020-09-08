@@ -1,0 +1,62 @@
+version: '2'
+volumes:
+  consul_data:
+    driver: local
+networks:
+  consul-tier:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.238.0/24
+  mongodb-tier:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.15.238.0/24
+services:
+  consul:
+    image: bitnami/consul:latest
+    container_name: hrolistic-consul
+    networks:
+        consul-tier:
+          ipv4_address: 172.20.238.5
+    volumes:
+      - consul_data:/bitnami/consul
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8301:8301/udp
+      - 8500:8500
+      - 8600:8600
+      - 8600:8600/udp
+  fix-mongodb-permissions:
+    image: 'bitnami/mongodb:4.2'
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - ./hrolistic-mongodb:/bitnami
+    networks:
+      mongodb-tier:
+        aliases:
+          - mongodb
+  mongodb-hrolistic:
+    container_name: hrolistic-mongodb
+    image: 'bitnami/mongodb:4.2'
+    depends_on:
+      - fix-mongodb-permissions
+    environment:
+      - MONGODB_ROOT_PASSWORD=pa$$w0rd
+      - MONGODB_DATABASE=hrolistic
+      - MONGODB_USERNAME=hrolistic
+      - MONGODB_PASSWORD=hrolistic
+      - MONGODB_ENABLE_IPV6=no
+    ports:
+      - 27017:27017
+    volumes:
+      - ./hrolistic-mongodb:/data/db
+    networks:
+      mongodb-tier:
+        aliases:
+          - mongodb
